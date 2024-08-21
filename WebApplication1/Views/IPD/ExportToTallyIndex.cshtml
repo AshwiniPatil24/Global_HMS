@@ -1,0 +1,177 @@
+﻿@model IEnumerable<WebApplication1.Models.IPDModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Custom fonts for this template -->
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="~/Content/css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Custom styles for this page -->
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <style>
+        .display-value {
+            width: 100%;
+        }
+    </style>
+</head>
+<body id="page-top">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary" style="font-size:25px">Export To Tally</h6>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="button" class="btn btn-primary" value="Export to Excel" onclick="exportTableToExcel('dataTable', 'IPD_Data')" style="float: right;" />
+                </div>
+            </div>
+        </div>
+        <div>
+            @using (Html.BeginForm("ExportToTallyIndex", "IPD", FormMethod.Get))
+            {
+                <table>
+                    <tr>
+                        <td class="text-center">
+                            @Html.RadioButton("SearchBy", "Branch", true, new { @class = "hidden" })
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <a class="fa fa-home" aria-hidden="true" href="~/HMS_Global/Index" style="font-size:20px"></a>
+                        <a href="~/HMS_Global/Index" style="font-size:20px">Home</a>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <span><b>Select Branch:</b></span>
+                        @Html.DropDownList("SearchValue", new List<SelectListItem>
+                        {
+                            new SelectListItem { Text = "All", Value = "All" },
+                            new SelectListItem { Text = "Jamner", Value = "Jamner" },
+                            new SelectListItem { Text = "Kurduwadi", Value = "Kurduwadi" }
+                        }, "Select Branch", new { Text = "SearchValue" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4"></div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <label for="Text">From Date</label>
+                        <input type="date" name="Fromdate" data-date-format='yyyy-MM-dd' />
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <label for="Text">To Date</label>
+                        <input type="date" name="Todate" data-date-format='yyyy-MM-dd' />
+                        <input type="submit" class="btn btn-primary" value="Search" style="float: right;" />
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" style="width: 100%;" cellspacing="10" border="1">
+                <tr>
+                    <th>GID</th>
+                    <th>Branch</th>
+                    <th>Patient ID</th>
+                    <th>BillingDate</th>
+                    <th>Patient Name</th>
+                    <th>Purpose</th>
+                    <th>Total Amount</th>
+                    <th>Discount</th>
+                    <th>Advance</th>
+                    <th>Net Payable</th>
+                    <th>Received</th>
+                    <th>Pending</th>
+                    <th>Test Charges</th>
+                    <th>Bed Charges</th>
+                    <th>Surgical Proc Charges</th>
+                    <th>Procedure Charges</th>
+                    <th>Consultant Charges</th>
+                    <th>Other Charges</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.GID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Branch)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PatientID_OPD_IPD)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Patient_Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Total_Amount)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Discount)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Advancce)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Net_Payable)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Received)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Pending)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Test_Charges)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Bed_Charges)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Surgical_Proc_Charges)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Procedure_Charges)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Consultant_Charges)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Other_Charges)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/Content/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="~/Content/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="~/Content/js/demo/datatables-demo.js"></script>
+
+    <!-- Export Table to Excel Script -->
+    <script type="text/javascript">
+        function exportTableToExcel(tableID, filename = 'excel_data') {
+            var table = document.getElementById(tableID);
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.table_to_sheet(table);
+            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+            function s2ab(s) {
+                var buf = new ArrayBuffer(s.length);
+                var view = new Uint8Array(buf);
+                for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            }
+            var blob = new Blob([s2ab(wbout)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename + ".xlsx";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+    @if (ViewBag.Message != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewBag.Message");
+            };
+        </script>
+    }
+</body>
+</html>
